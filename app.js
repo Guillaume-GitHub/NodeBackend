@@ -1,5 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+// Init MongoDB connection
+mongoose.connect('URL', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true})
+    .then(() => console.log('Connection to MongoDB Successfull !'))
+    .catch(() => console.log('Connection to MongoDb failed !'));
 
 const app = express();
 
