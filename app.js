@@ -1,7 +1,9 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 
 const app = express();
 
+// ALLOW CORS 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
@@ -9,6 +11,19 @@ app.use((req, res, next) => {
     next();
 });
 
+// PARSE REQ BODY TO JSON OBJECT
+app.use(bodyParser.json());
+
+// POST ROUTE
+app.post(('/api/stuff'), (req, res, next) => {
+    console.log(req.body);
+    res.status(201).json({
+        message: 'Ressource Created !'
+    });
+});
+
+
+// GET ROUTE
 app.use(('/api/stuff'), (req, res, next) => {
     const stuff = [
         {
