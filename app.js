@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const Thing = require('./models/Thing');
+
 // Init MongoDB connection
-mongoose.connect('URL', {
+mongoose.connect('url', {
     useNewUrlParser: true,
     useUnifiedTopology: true})
     .then(() => console.log('Connection to MongoDB Successfull !'))
@@ -24,34 +26,21 @@ app.use(bodyParser.json());
 
 // POST ROUTE
 app.post(('/api/stuff'), (req, res, next) => {
-    console.log(req.body);
-    res.status(201).json({
-        message: 'Ressource Created !'
+    delete req.body._id;
+    const thing = new Thing({
+        ...req.body // use Spread syntax to bind all items
     });
-});
 
+    thing.save()
+    .then(() => res.status(201).json({message: 'Ressource Created !'}))
+    .catch(error => res.status(400).json({error}));
+});
 
 // GET ROUTE
 app.use(('/api/stuff'), (req, res, next) => {
-    const stuff = [
-        {
-            _id: 'ABCDERF',
-            title: 'Mon premier objet',
-            description: 'Decription de mon 1er objet',
-            imageUrl: 'https://cdn.pixabay.com/photo/2017/08/06/07/28/instrument-2589863_960_720.jpg',
-            price: 4900,
-            userId: 'JJKFZJcedlkjdf'
-        },
-        {
-            _id: 'PDGHVNBKF',
-            title: 'Mon second objet',
-            description: 'Decription de mon 2eme objet',
-            imageUrl: 'https://cdn.pixabay.com/photo/2010/12/13/10/01/accord-2119_960_720.jpg',
-            price: 3500,
-            userId: 'kjdbvhn536fdg0f'
-        }
-    ];
-    res.status(200).json(stuff);
+    Thing.find()
+    .then(things => res.status(200).json(things))
+    .catch(error => res.status(400).json(error));
 });
 
 module.exports = app;
