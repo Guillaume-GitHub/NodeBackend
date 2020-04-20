@@ -50,4 +50,11 @@ app.get(('/api/stuff'), (req, res, next) => {
     .catch(error => res.status(400).json(error));
 });
 
+// PUT ROUTE ID
+app.put(('/api/stuff/:id'), (req, res, next) => {
+    Thing.updateOne({ _id: req.params.id}, { ...req.body, _id: req.params.id })
+    .then(() => res.status(200).json({ message: 'Object Updated !' }))
+    .catch( error => res.status(400).json({ error }));
+});
+
 module.exports = app;
