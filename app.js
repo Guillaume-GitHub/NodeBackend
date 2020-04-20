@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Thing = require('./models/Thing');
 
 // Init MongoDB connection
-mongoose.connect('url', {
+mongoose.connect('mongodb+srv://gbague:gbague123@cluster0-4xpvn.mongodb.net/test?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true})
     .then(() => console.log('Connection to MongoDB Successfull !'))
@@ -36,8 +36,15 @@ app.post(('/api/stuff'), (req, res, next) => {
     .catch(error => res.status(400).json({error}));
 });
 
+// GET ROUTE ID
+app.get(('/api/stuff/:id'), (req, res, next) => {
+    Thing.findOne({ _id: req.params.id})
+    .then( thing => res.status(200).json(thing))
+    .catch( error => res.status(404).json({ error }));
+});
+
 // GET ROUTE
-app.use(('/api/stuff'), (req, res, next) => {
+app.get(('/api/stuff'), (req, res, next) => {
     Thing.find()
     .then(things => res.status(200).json(things))
     .catch(error => res.status(400).json(error));
