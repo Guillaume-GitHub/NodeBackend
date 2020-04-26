@@ -1,10 +1,11 @@
 const User = require('../models/User');
 const bcryt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.signup = (req, res, next) => {
-    bcryt.hash(req.boby.password, 10)
+    bcryt.hash(req.body.password, 10)
     .then(hash => {
-        const user =  User({
+        const user = new User({
             email: req.body.email,
             password: hash
         });
@@ -29,7 +30,11 @@ exports.login = (req, res, next) => {
             }
             res.status(200).json({ 
                 userId: user._id,
-                token: 'FdsdfD_gfgPLS4s6df53g4qgsHYggh_6qsd4f'
+                token: jwt.sign(
+                    { userId: user._id },
+                    'RAMDOM_SECRET_KEY',
+                    { expiresIn: '24h' }
+                )
             });
         })
         .catch()
