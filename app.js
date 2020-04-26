@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const stuffRoutes = require('./routes/stuff')
+const stuffRoutes = require('./routes/stuff');
+const userRoutes = require('./routes/user');
 
 // Init MongoDB connection
 mongoose.connect('mongodb+srv://gbague:gbague123@cluster0-4xpvn.mongodb.net/test?retryWrites=true&w=majority', {
@@ -25,7 +26,10 @@ app.use((req, res, next) => {
 // PARSE REQ BODY TO JSON OBJECT
 app.use(bodyParser.json());
 
-// BASE API
+// THINGS API
 app.use('/api/stuff', stuffRoutes);
+
+// USER API
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
